@@ -3,7 +3,7 @@ package com.training.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletContext;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,42 +11,53 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class HomeServlet
+ * Servlet implementation class LoginServlet
  */
-@WebServlet("/home")
-public class HomeServlet extends HttpServlet {
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-	
-	String msg;
-	
-    public HomeServlet() {
+    public LoginServlet() {
         super();
         // TODO Auto-generated constructor stub
-    }
-    
-    public void init() {
-    	msg="Hello from servlet !!!!";
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		ServletContext context = getServletConfig().getServletContext();
-		
-		String value = context.getInitParameter("value1");
 		
 		String userName = request.getParameter("uname");
+		String password = request.getParameter("pwd");
 		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		out.println("<h1> "+msg+" "+value+ "</h1>");
-		out.println("<h1> "+userName+" "+value+ "</h1>");
+		
+		if(userName.equals("") || password.equals("")) {
+			out.print("<h2>**Please enter username and password**</h2> <br>");
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/index.html");
+			rd.include(request, response);
+				
+		}
+		else if(userName.equals("test") || password.equals("1234")) {
+			
+			request.setAttribute("user", userName);
+			RequestDispatcher rd = request.getRequestDispatcher("WelcomeServlet");
+			rd.forward(request, response);
+			
+			//response.sendRedirect("WelcomeServlet");
+		}
+		
+		else {
+			out.print("<h2>** Incorrect Login Credentials **</h2> ");
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/index.html");
+			rd.include(request, response);
+		}
 	}
 
 	/**
@@ -54,13 +65,7 @@ public class HomeServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("Post method is called");
 		doGet(request, response);
 	}
 
 }
-
-// Servlet Config: Initial parameters can be configured using ServletConfig
-// Each servlet will have their own servlet config
-
-

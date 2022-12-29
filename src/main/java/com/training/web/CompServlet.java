@@ -12,45 +12,51 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class AboutServlet
+ * Servlet implementation class CompServlet
  */
-@WebServlet("/AboutServlet")
-public class AboutServlet extends HttpServlet {
+@WebServlet("/CompServlet1")
+public class CompServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
 	
-	ServletConfig config = getServletConfig();
 	
-    public AboutServlet() {
+	
+    public CompServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see Servlet#init(ServletConfig)
-	 */
-	public void init(ServletConfig config) throws ServletException {
-		this.config = config;
+    
+    public void init() throws ServletException {
+		
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//config = getServletConfig();
-		String username = config.getInitParameter("username");
-		
-		ServletContext context = config.getServletContext();
-		
-		String value= context.getInitParameter("value1");
+       
+		ServletConfig config=getServletConfig();
+		ServletContext context=getServletConfig().getServletContext();
+		String compN =context.getInitParameter("company");
+		String usname = request.getParameter("usName");
+		String psswd = request.getParameter("pass");
 		
 		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		out.println("<h1> "+username+ " " +value+" </h1>");
+		PrintWriter out=response.getWriter();
+		String StorderPass=config.getInitParameter("password");
+		if(psswd.equals(StorderPass)) {
+			out.println("<h1>"+"Welcome to "+compN+"</h1>");
+			out.println("<h2>"+"User Name: "+usname+"</h2>");
+			
+			
+		}
+		else {
+			out.println("<h3>"+"Wrong Credentials "+"</h3>");
+		}
+		
 	}
 
 	/**
@@ -62,18 +68,3 @@ public class AboutServlet extends HttpServlet {
 	}
 
 }
-
-// RequestDispatcher Interface: It forwards a request to another resource or include the content of an resource
-// using this we can call anither resource from servlet
-
-// Methods of RequestDispatcher:
-// forward(ServletRequest req,ServletResponse res): forwards the request from servlet to another resource
-// include(ServletRequest req,ServletResponse res): it will include contents of a resource in the response
-
-
-
-
-
-
-
-
